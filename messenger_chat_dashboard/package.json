@@ -4,9 +4,9 @@
   "description": "Shopify's node app for CLI tool",
   "scripts": {
     "test": "jest",
-    "dev": "cross-env NODE_ENV=development nodemon ./server/index.js --watch ./server/index.js",
+    "dev": "NODE_ENV=development nodemon ./server/index.js --watch ./server/index.js",
     "build": "NEXT_TELEMETRY_DISABLED=1 next build",
-    "start": "cross-env NODE_ENV=production node ./server/index.js"
+    "start": "NODE_ENV=production node ./server/index.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,7 @@
     "@shopify/app-bridge-utils": "^2.0.2",
     "@shopify/koa-shopify-auth": "^4.1.2",
     "@shopify/polaris": "^6.2.0",
+    "@shopify/polaris-icons": "^4.11.0",
     "apollo-boost": "^0.4.9",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",

@@ -1,6 +1,6 @@
 import { Page } from "@shopify/polaris";
 
-export default function Index() {
+export default function Orders() {
   return (
     <div className="page-container">
       <Page fullWidth>
