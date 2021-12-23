@@ -7,7 +7,10 @@ import Koa from "koa";
 import next from "next";
 import Router from "koa-router";
 
+const shops = require("../models").shops;
+
 dotenv.config();
+const { SHOP } = process.env;
 const port = parseInt(process.env.PORT, 10) || 8081;
 const dev = process.env.NODE_ENV !== "production";
 const app = next({
@@ -36,6 +39,7 @@ app.prepare().then(async () => {
   server.keys = [Shopify.Context.API_SECRET_KEY];
   server.use(
     createShopifyAuth({
+      accessMode: "offline",
       async afterAuth(ctx) {
         // Access token and shop available in ctx.state.shopify
         const { shop, accessToken, scope } = ctx.state.shopify;
@@ -55,6 +59,31 @@ app.prepare().then(async () => {
           console.log(
             `Failed to register APP_UNINSTALLED webhook: ${response.result}`
           );
+        }
+
+        let shopData = await shops.findOne({
+          where: { domain: shop },
+        });
+
+        if (!shopData) {
+          const shopDataNew = await shops.create({
+            domain: shop,
+            token: accessToken,
+          });
+
+          if (!shopDataNew) {
+            ctx.throw(400, "Error in insert new domain");
+          } else {
+          }
+        } else {
+          let updateData = { token: accessToken };
+          const shopDataUpdate = await shops.update(updateData, {
+            where: { id: shopData.get().id },
+          });
+
+          if (!shopDataUpdate) {
+            ctx.throw(400, "Error in update token");
+          }
         }
 
         // Redirect to app with shop parameter upon auth
@@ -85,6 +114,32 @@ app.prepare().then(async () => {
       await Shopify.Utils.graphqlProxy(ctx.req, ctx.res);
     }
   );
+
+  router.post("/orders", async (ctx) => {
+    let shopData = await shops.findOne({
+      where: {
+        domain: SHOP,
+      },
+    });
+    console.log("access_token: ", shopData.get().token);
+    let orderRes = await fetch(
+      `https://${SHOP}/admin/api/2020-10/orders.json?status=any`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Shopify-Access-Token": shopData.get().token,
+        },
+      }
+    );
+
+    let orderResJson = await orderRes.json();
+
+    ctx.body = {
+      success: true,
+      orders: orderResJson,
+    };
+  });
 
   router.get("(/_next/static/.*)", handleRequest); // Static content is clear
   router.get("/_next/webpack-hmr", handleRequest); // Webpack content is clear

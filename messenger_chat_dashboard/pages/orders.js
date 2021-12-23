@@ -1,6 +1,11 @@
 import { Page } from "@shopify/polaris";
+import { useRouter } from "next/dist/client/router";
 
-export default function Orders() {
+export default function Orders({ orders }) {
+  const router = useRouter();
+
+  console.log(router.pathname);
+
   return (
     <div className="page-container">
       <Page fullWidth>
@@ -10,3 +15,11 @@ export default function Orders() {
     </div>
   );
 }
+
+Orders.getInitialProps = async (ctx) => {
+  const res = await fetch("/orders", { method: "POST" });
+  const json = await res.json();
+  return {
+    orders: json.orders,
+  };
+};

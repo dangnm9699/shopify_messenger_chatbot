@@ -1,4 +1,4 @@
-import ApolloClient from "apollo-boost";
+import ApolloClient, { InMemoryCache } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import {
   AppProvider,
@@ -19,7 +19,7 @@ import "@shopify/polaris/dist/styles.css";
 import styles from "../styles/globals.css";
 import translations from "@shopify/polaris/locales/en.json";
 import { useRouter } from "next/dist/client/router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 function userLoggedInFetch(app) {
   const fetchFunction = authenticatedFetch(app);
@@ -70,12 +70,19 @@ function MyProvider(props) {
 
 function MyApp({ Component, pageProps, host }) {
   const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
+  const skipToContentRef = useRef(null);
 
   const loadingMarkup = isLoading ? <Loading /> : null;
 
+  const skipToContentTarget = (
+    <a id="SkipToContentTarget" ref={skipToContentRef} tabIndex={-1} />
+  );
+
   const actualPageMarkup = (
     <>
+      {skipToContentTarget}
       <MyProvider Component={Component} {...pageProps} />
     </>
   );
@@ -158,9 +165,18 @@ function MyApp({ Component, pageProps, host }) {
   );
 }
 
-MyApp.getInitialProps = async ({ ctx }) => {
+MyApp.getInitialProps = async ({ Component, ctx }) => {
+  let pageProps = {};
+
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
+  }
+
+  console.log(pageProps);
+
   return {
     host: ctx.query.host,
+    pageProps,
   };
 };
 
