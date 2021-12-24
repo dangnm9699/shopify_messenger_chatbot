@@ -1,0 +1,20 @@
+{
+  "name": "messenger_chatlog_dashboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "tuantungdang",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "mongodb": "^4.2.2",
+    "mongoose": "^6.1.3",
+    "nodemon": "^2.0.15",
+    "path": "^0.12.7"
+  }
+}
