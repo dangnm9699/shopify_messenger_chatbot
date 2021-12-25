@@ -1,5 +1,5 @@
 import ApolloClient, { InMemoryCache } from "apollo-boost";
-import { ApolloProvider } from "react-apollo";
+import { ApolloProvider, Query } from "react-apollo";
 import {
   AppProvider,
   Card,
@@ -15,6 +15,7 @@ import {
 import { Provider, useAppBridge } from "@shopify/app-bridge-react";
 import { authenticatedFetch } from "@shopify/app-bridge-utils";
 import { Redirect } from "@shopify/app-bridge/actions";
+import App from "next/app";
 import "@shopify/polaris/dist/styles.css";
 import styles from "../styles/globals.css";
 import translations from "@shopify/polaris/locales/en.json";
@@ -72,20 +73,7 @@ function MyApp({ Component, pageProps, host }) {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
-  const skipToContentRef = useRef(null);
-
   const loadingMarkup = isLoading ? <Loading /> : null;
-
-  const skipToContentTarget = (
-    <a id="SkipToContentTarget" ref={skipToContentRef} tabIndex={-1} />
-  );
-
-  const actualPageMarkup = (
-    <>
-      {skipToContentTarget}
-      <MyProvider Component={Component} {...pageProps} />
-    </>
-  );
 
   const loadingPageMarkup = (
     <SkeletonPage>
@@ -102,7 +90,11 @@ function MyApp({ Component, pageProps, host }) {
     </SkeletonPage>
   );
 
-  const pageMarkup = isLoading ? loadingPageMarkup : actualPageMarkup;
+  const pageMarkup = isLoading ? (
+    loadingPageMarkup
+  ) : (
+    <MyProvider Component={Component} {...pageProps} />
+  );
 
   const [selected, setSelected] = useState(0);
 
@@ -165,19 +157,10 @@ function MyApp({ Component, pageProps, host }) {
   );
 }
 
-MyApp.getInitialProps = async ({ Component, ctx }) => {
-  let pageProps = {};
+MyApp.getInitialProps = async (appContext) => {
+  const pageProps = await App.getInitialProps(appContext);
 
-  if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx);
-  }
-
-  console.log(pageProps);
-
-  return {
-    host: ctx.query.host,
-    pageProps,
-  };
+  return { host: appContext.ctx.query.host, ...pageProps };
 };
 
 export default MyApp;

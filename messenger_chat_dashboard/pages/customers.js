@@ -17,8 +17,16 @@ export default function Customers({ orders }) {
 }
 
 Customers.getInitialProps = async (ctx) => {
-  const res = await fetch("/orders", { method: "POST" });
+  const res = await fetch("http://localhost:8081/orders", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   const json = await res.json();
+  await new Promise((resolve) => {
+    setTimeout(resolve, 1500);
+  });
   return {
     orders: json.orders,
   };

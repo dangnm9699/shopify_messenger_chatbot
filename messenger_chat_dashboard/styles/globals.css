@@ -11,3 +11,40 @@ body {
 .page-container {
   width: 100%;
 }
+
+.Polaris-DataTable__Table thead tr th {
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.Polaris-DatePicker__MonthLayout {
+  margin-top: 0 !important;
+}
+
+.Polaris-Card__Section {
+  padding: 0 0.75rem !important;
+}
+
+.orders__average-value .Polaris-Card__Section {
+  padding: 0 2rem 1rem 2rem !important;
+}
+
+.charts,
+.general {
+  display: flex;
+  width: 100%;
+}
+
+.charts > div:first-child,
+.general > div:first-child {
+  margin-right: 1.5rem;
+}
+
+.charts > div:last-child,
+.general > div:last-child {
+  margin-left: 1.5rem;
+}
+
+.charts > div,
+.general > div {
+  width: calc(50% - 1.5rem);
+}

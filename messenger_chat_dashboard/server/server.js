@@ -8,6 +8,7 @@ import next from "next";
 import Router from "koa-router";
 
 const shops = require("../models").shops;
+const cors = require("@koa/cors");
 
 dotenv.config();
 const { SHOP } = process.env;
@@ -16,6 +17,7 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({
   dev,
 });
+
 const handle = app.getRequestHandler();
 
 Shopify.Context.initialize({
@@ -35,6 +37,7 @@ const ACTIVE_SHOPIFY_SHOPS = {};
 
 app.prepare().then(async () => {
   const server = new Koa();
+  server.use(cors());
   const router = new Router();
   server.keys = [Shopify.Context.API_SECRET_KEY];
   server.use(
@@ -115,15 +118,35 @@ app.prepare().then(async () => {
     }
   );
 
+  router.post("/shop-information", async (ctx) => {
+    let shopData = await shops.findOne({
+      where: {
+        domain: SHOP,
+      },
+    });
+
+    ctx.body = {
+      success: true,
+      shop: shopData.get(),
+    };
+  });
+
   router.post("/orders", async (ctx) => {
     let shopData = await shops.findOne({
       where: {
         domain: SHOP,
       },
     });
-    console.log("access_token: ", shopData.get().token);
+
+    let created_at_min = ctx.query.created_at_min
+      ? ctx.query.created_at_min
+      : "";
+    let created_at_max = ctx.query.created_at_max
+      ? ctx.query.created_at_max
+      : "";
+
     let orderRes = await fetch(
-      `https://${SHOP}/admin/api/2020-10/orders.json?status=any`,
+      `https://${SHOP}/admin/api/2020-10/orders.json?status=any&fields=line_items,note,total_price,created_at,customer_locale,total_tax&created_at_min=${created_at_min}&created_at_max=${created_at_max}`,
       {
         method: "GET",
         headers: {
@@ -135,9 +158,12 @@ app.prepare().then(async () => {
 
     let orderResJson = await orderRes.json();
 
+    let orders = orderResJson.orders;
+    orders = orders.filter((order) => order.note == "chatbot");
+
     ctx.body = {
       success: true,
-      orders: orderResJson,
+      orders: orders,
     };
   });
 
