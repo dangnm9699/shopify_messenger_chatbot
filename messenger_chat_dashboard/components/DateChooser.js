@@ -20,6 +20,7 @@ export default function DateChooser({
     start: new Date(startDate),
     end: new Date(endDate),
   });
+
   const handleClickApply = useCallback(async () => {
     setLoading(true);
 
