@@ -5,7 +5,7 @@
   "scripts": {
     "test": "jest",
     "dev": "NODE_ENV=development nodemon ./server/index.js --watch ./server/index.js",
-    "build": "npm install -g sqlite3 && NEXT_TELEMETRY_DISABLED=1 next build",
+    "build": "NEXT_TELEMETRY_DISABLED=1 next build",
     "start": "NODE_ENV=production node ./server/index.js"
   },
   "repository": {

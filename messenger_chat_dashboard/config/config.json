@@ -1,15 +1,15 @@
 {
   "development": {
-    "dialect": "sqlite",
-    "storage": "database.sqlite",
-    "logging": false
+    "dialect": "postgresql",
+    "database": "chatbot",
+    "logging": true
   },
   "test": {
-    "dialect": "sqlite",
-    "storage": "database.sqlite"
+    "dialect": "postgresql",
+    "database": "chatbot"
   },
   "production": {
-    "dialect": "sqlite",
-    "storage": "database.sqlite"
+    "dialect": "postgresql",
+    "database": "chatbot"
   }
 }

@@ -159,13 +159,18 @@ Index.getInitialProps = async (ctx) => {
     },
   });
   const shopResJson = await shopRes.json();
-
-  const ordersRes = await fetch(`http://localhost:8081/orders`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  console.log(process.env.NODE_ENV);
+  const ordersRes = await fetch(
+    process.env.NODE_ENV == "production"
+      ? `https://messenger-chatbot-dashboard.herokuapp.com/orders`
+      : `http://localhost:8081/orders`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   const ordersResJson = await ordersRes.json();
   await new Promise((resolve) => {
     setTimeout(resolve, 1500);
