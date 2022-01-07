@@ -17,12 +17,17 @@ export default function Customers({ orders }) {
 }
 
 Customers.getInitialProps = async (ctx) => {
-  const res = await fetch("http://localhost:8081/orders", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const res = await fetch(
+    process.env.NODE_ENV == "production"
+      ? "https://messenger-chatbot-dashboard.herokuapp.com/orders"
+      : "http://localhost:8081/orders",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   const json = await res.json();
   await new Promise((resolve) => {
     setTimeout(resolve, 1500);

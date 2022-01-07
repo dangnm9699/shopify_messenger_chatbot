@@ -28,8 +28,13 @@ export default function DateChooser({
     let end = new Date(selectedDates.end);
     end.setDate(end.getDate() + 1);
 
+    let baseUrl =
+      process.env.NODE_ENV == "production"
+        ? "https://messenger-chatbot-dashboard.herokuapp.com"
+        : "http://localhost:8081";
+
     const ordersRes = await fetch(
-      `http://localhost:8081/orders?created_at_min=${start
+      `${baseUrl}/orders?created_at_min=${start
         .toISOString()
         .substring(0, 19)}&created_at_max=${end
         .toISOString()
@@ -59,8 +64,8 @@ export default function DateChooser({
       <Card sectioned>
         <DatePicker
           id={id}
-          month={new Date().getMonth()}
-          year={new Date().getFullYear()}
+          month={month}
+          year={year}
           multiMonth
           allowRange
           disableDatesAfter={new Date(endDate)}

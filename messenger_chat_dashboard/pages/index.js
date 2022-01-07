@@ -31,6 +31,7 @@ export default function Index({
   domain,
   minMax: { startDate, endDate, startMinus1Date, endPlus1Date },
 }) {
+  console.log("start date = ", startDate);
   const [orders, setOrders] = useState([...originalOrders]);
   const [loading, setLoading] = useState(false);
 
@@ -152,18 +153,23 @@ export default function Index({
 }
 
 Index.getInitialProps = async (ctx) => {
-  const shopRes = await fetch("http://localhost:8081/shop-information", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const shopRes = await fetch(
+    process.env.NODE_ENV == "production"
+      ? "https://messenger-chatbot-dashboard.herokuapp.com/shop-information"
+      : "http://localhost:8081/shop-information",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   const shopResJson = await shopRes.json();
   console.log(process.env.NODE_ENV);
   const ordersRes = await fetch(
     process.env.NODE_ENV == "production"
-      ? `https://messenger-chatbot-dashboard.herokuapp.com/orders`
-      : `http://localhost:8081/orders`,
+      ? "https://messenger-chatbot-dashboard.herokuapp.com/orders"
+      : "http://localhost:8081/orders",
     {
       method: "POST",
       headers: {
