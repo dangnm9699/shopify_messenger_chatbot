@@ -1,38 +1,20 @@
-# Messenger Chatbot Analyzer
+# Query chatlog for dashboard
 
-Heroku deploy:
+## Requirements
 
-```bash
-git subtree push --prefix messenger_chat_dashboard heroku master
+``` 
+nodejs >= v12.xx
+npm >= v6.x
 ```
 
-**Prerequisites**
+## Install
 
-- Python 3.8.x
-- Ubuntu 20.04
-
-## 1. Setup environtment
-
-- Create venv
-
-```bash
-python -m venv .venv
+``` 
+npm install
 ```
 
-- Activate venv
+## Run
 
-```bash
-source ./.venv/bin/activate
 ```
-
-- Install packages
-
-```bash
-pip install -r requirements.txt
-```
-
-## 2. How to run
-
-```bash
-uvicorn main:app --reload
+npm start
 ```
