@@ -6,6 +6,9 @@ const Gender = ['nam', 'nữ']
 
 async function getTopFindingByCollection(req, res) {
     let kLimit = req.query.limit
+    if (kLimit == undefined) {
+        kLimit = Collections.length
+    }
 
     let result = []
     for (i = 0; i < Collections.length; i++) {
@@ -44,6 +47,9 @@ async function getTopFindingByCollection(req, res) {
 
 async function getTopFindingByGender(req, res) {
     let kLimit = req.query.limit
+    if (kLimit == undefined) {
+        kLimit = Collections.length
+    }
 
     let result = []
     for (i = 0; i < Gender.length; i++) {
