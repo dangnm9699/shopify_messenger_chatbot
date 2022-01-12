@@ -56,15 +56,22 @@ async function getTopFindingByGender(req, res) {
         let tempResult = []
         for (j = 0; j < Collections.length; j++) {
             docs = await Conversations.find({
-                "events.event": "user",
-                "events.text": {
-                    $regex: '.*' + Collections[j] + '.*',
-                    $options: 'i' //Match both uppercase and lowercase
-                },
-                "events.text": {
-                    $regex: '.*' + Gender[i] + '.*',
-                    $options: 'i' //Match both uppercase and lowercase
-                }
+                $or: [
+                    {
+                        "events.event": "user",
+                        "events.text": {
+                            $regex: '.*' + Gender[i] + '.*' + Collections[j] + '.*',
+                            $options: 'i' //Match both uppercase and lowercase
+                        }
+                    },
+                    {
+                        "events.event": "user",
+                        "events.text": {
+                            $regex: '.*' + Collections[j] + '.*' + Gender[i] + '.*',
+                            $options: 'i' //Match both uppercase and lowercase
+                        }
+                    }
+                ]
             }).exec()
 
             tempResult.push({
