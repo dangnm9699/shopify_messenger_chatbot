@@ -30,7 +30,7 @@ export default function DateChooser({
 
     let baseUrl =
       process.env.NODE_ENV == "production"
-        ? "https://messenger-chatbot-dashboard.herokuapp.com"
+        ? `${process.env.HOST}`
         : "http://localhost:8081";
 
     const ordersRes = await fetch(

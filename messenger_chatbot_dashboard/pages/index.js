@@ -3,12 +3,14 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  TimeScale,
   PointElement,
   LineElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
+import "chartjs-adapter-moment";
 import { Line } from "react-chartjs-2";
 import { useState } from "react";
 import DateChooser from "../components/DateChooser";
@@ -16,6 +18,7 @@ import DateChooser from "../components/DateChooser";
 ChartJS.register(
   CategoryScale,
   LinearScale,
+  TimeScale,
   PointElement,
   LineElement,
   Title,
@@ -62,10 +65,14 @@ export default function Index({
   });
 
   const chart_data_sale = {
-    labels: productCountByDate.map((date) => date.created_at),
     datasets: [
       {
-        data: productCountByDate.map((date) => parseInt(date.quantity)),
+        data: productCountByDate.map((date) => {
+          return {
+            x: date.created_at,
+            y: parseInt(date.quantity)
+          }
+        }),
         label: "Product Count",
         borderColor: "rgba(0, 128, 96, 1)",
         backgroundColor: "rgba(0, 128, 96, 1)",
@@ -75,10 +82,14 @@ export default function Index({
   };
 
   const chart_data_revenue = {
-    labels: revenueByDate.map((date) => date.created_at),
     datasets: [
       {
-        data: revenueByDate.map((date) => parseFloat(date.revenue)),
+        data: revenueByDate.map((date) => {
+          return {
+            x: date.created_at,
+            y: parseFloat(date.revenue)
+          }
+        }),
         label: "Revenue",
         borderColor: "rgba(0, 128, 96, 1)",
         backgroundColor: "rgba(0, 128, 96, 1)",
@@ -119,13 +130,22 @@ export default function Index({
         <br />
         <div className="sale charts">
           <div className="sale__volume">
-            <Card title="Products Quantity In The Nearest Week" sectioned>
+            <Card title="Products Quantity" sectioned>
               <div style={{ height: "300px" }}>
                 <Line
                   data={chart_data_sale}
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
+                    scales: {
+                      x: {
+                        type: "time",
+                        time: {
+                          unit: "day",
+                          stepSize: 1
+                        }
+                      }
+                    }
                   }}
                 />
               </div>
@@ -133,13 +153,22 @@ export default function Index({
           </div>
           <br />
           <div className="sale__revenue">
-            <Card title="Revenue In The Nearest Week" sectioned>
+            <Card title="Revenue In" sectioned>
               <div style={{ height: "300px" }}>
                 <Line
                   data={chart_data_revenue}
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
+                    scales: {
+                      x: {
+                        type: "time",
+                        time: {
+                          unit: "day",
+                          stepSize: 1
+                        }
+                      }
+                    }
                   }}
                 />
               </div>
@@ -155,7 +184,7 @@ export default function Index({
 Index.getInitialProps = async (ctx) => {
   const shopRes = await fetch(
     process.env.NODE_ENV == "production"
-      ? "https://messenger-chatbot-dashboard.herokuapp.com/shop-information"
+      ? `${process.env.HOST}/shop-information`
       : "http://localhost:8081/shop-information",
     {
       method: "POST",
@@ -165,10 +194,9 @@ Index.getInitialProps = async (ctx) => {
     }
   );
   const shopResJson = await shopRes.json();
-  console.log(process.env.NODE_ENV);
   const ordersRes = await fetch(
     process.env.NODE_ENV == "production"
-      ? "https://messenger-chatbot-dashboard.herokuapp.com/orders"
+      ? `${process.env.HOST}/orders`
       : "http://localhost:8081/orders",
     {
       method: "POST",

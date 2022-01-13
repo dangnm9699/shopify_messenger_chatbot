@@ -4,18 +4,22 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  TimeScale,
   PointElement,
   LineElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
+import "chartjs-adapter-moment";
 import { Line } from "react-chartjs-2";
 import { useState } from "react";
+import order from "../helpers/order";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
+  TimeScale,
   PointElement,
   LineElement,
   Title,
@@ -44,10 +48,14 @@ export default function Orders({
   );
 
   const chart_data_orders_count = {
-    labels: orderByDate.map((date) => date.created_at),
     datasets: [
       {
-        data: orderByDate.map((date) => parseInt(date.quantity)),
+        data: orderByDate.map((date) => {
+          return {
+            x: date.created_at,
+            y: parseFloat(date.quantity)
+          }
+        }),
         label: "Order Count",
         borderColor: "rgba(0, 128, 96, 1)",
         backgroundColor: "rgba(0, 128, 96, 1)",
@@ -57,17 +65,26 @@ export default function Orders({
   };
 
   const chart_data_orders_min_max = {
-    labels: orderMinMaxByDate.map((date) => date.created_at),
     datasets: [
       {
-        data: orderMinMaxByDate.map((date) => parseFloat(date.max)),
+        data: orderMinMaxByDate.map((date) => {
+          return {
+            x: date.created_at,
+            y: parseFloat(date.max)
+          }
+        }),
         label: "Max",
         borderColor: "rgba(0, 128, 96, 1)",
         backgroundColor: "rgba(0, 128, 96, 1)",
         fill: false,
       },
       {
-        data: orderMinMaxByDate.map((date) => parseFloat(date.min)),
+        data: orderMinMaxByDate.map((date) => {
+          return {
+            x: date.created_at,
+            y: parseFloat(date.min)
+          }
+        }),
         label: "Min",
         borderColor: "rgba(216, 44, 13, 1)",
         backgroundColor: "rgba(216, 44, 13, 1)",
@@ -115,26 +132,44 @@ export default function Orders({
         <br />
         <div className="orders charts">
           <div className="orders__count">
-            <Card title="Orders Quantity In The Nearest Week" sectioned>
+            <Card title="Orders Quantity" sectioned>
               <div style={{ height: "300px" }}>
                 <Line
                   data={chart_data_orders_count}
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
+                    scales: {
+                      x: {
+                        type: "time",
+                        time: {
+                          unit: "day",
+                          stepSize: 1
+                        }
+                      }
+                    }
                   }}
                 />
               </div>
             </Card>
           </div>
           <div className="orders__min-max">
-            <Card title="Orders Min/Max Value In The Nearest Week" sectioned>
+            <Card title="Orders Min/Max Value" sectioned>
               <div style={{ height: "300px" }}>
                 <Line
                   data={chart_data_orders_min_max}
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
+                    scales: {
+                      x: {
+                        type: "time",
+                        time: {
+                          unit: "day",
+                          stepSize: 1
+                        }
+                      }
+                    }
                   }}
                 />
               </div>
@@ -149,7 +184,7 @@ export default function Orders({
 Orders.getInitialProps = async (ctx) => {
   const ordersRes = await fetch(
     process.env.NODE_ENV == "production"
-      ? "https://messenger-chatbot-dashboard.herokuapp.com/orders"
+      ? `${process.env.HOST}/orders`
       : "http://localhost:8081/orders",
     {
       method: "POST",

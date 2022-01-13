@@ -19,7 +19,7 @@ export default function Customers({ orders }) {
 Customers.getInitialProps = async (ctx) => {
   const res = await fetch(
     process.env.NODE_ENV == "production"
-      ? "https://messenger-chatbot-dashboard.herokuapp.com/orders"
+      ? `${process.env.HOST}/orders`
       : "http://localhost:8081/orders",
     {
       method: "POST",
