@@ -45,7 +45,6 @@ module.exports = {
     }, []);
     return result;
   },
-
   getAvgByDateRange: function (orders) {
     let avg = 0;
     orders.forEach((order) => {
@@ -59,6 +58,7 @@ module.exports = {
 
     return {
       avgValuePerOrder: avg,
+      numberOfOrders: orders.length
     };
   },
 };

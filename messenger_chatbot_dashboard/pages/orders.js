@@ -37,7 +37,7 @@ export default function Orders({
   const [orders, setOrders] = useState([...originalOrders]);
   const [loading, setLoading] = useState(false);
 
-  const { avgValuePerOrder } = OrderHelper.getAvgByDateRange(orders);
+  const { avgValuePerOrder, numberOfOrders } = OrderHelper.getAvgByDateRange(orders);
 
   const orderByDate = OrderHelper.getOrderCountByDate(orders).sort(
     (a, b) => new Date(a.created_at) - new Date(b.created_at)
@@ -123,6 +123,20 @@ export default function Orders({
                 }}
               >
                 {CommonHelper.numberWithCommas(avgValuePerOrder)}
+              </div>
+            </Card>
+
+            <Card title="Number of Orders" sectioned>
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontWeight: "600",
+                  fontSize: "2rem",
+                  padding: "0.25rem",
+                }}
+              >
+                {`${CommonHelper.numberWithCommas(numberOfOrders)} orders`}
               </div>
             </Card>
           </div>
