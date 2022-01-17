@@ -96,7 +96,7 @@ export default function Orders({
   return (
     <div className="page-container">
       <Page fullWidth>
-        <div className="orders general">
+        <div className="orders fullwidth">
           <div className="" style={{ width: "calc(60% - 1.5rem)" }}>
             <DateChooser
               id={"date-picker-orders"}
@@ -109,7 +109,7 @@ export default function Orders({
             />
           </div>
           <div
-            className="orders__average-value"
+            className="two-fifth"
             style={{ width: "calc(40% - 1.5rem)" }}
           >
             <Card title="Avg. Value/Order" sectioned>
@@ -144,7 +144,7 @@ export default function Orders({
         <br />
         <hr />
         <br />
-        <div className="orders charts">
+        <div className="orders fullwidth">
           <div className="orders__count">
             <Card title="Orders Quantity" sectioned>
               <div style={{ height: "300px" }}>
@@ -209,7 +209,7 @@ Orders.getInitialProps = async (ctx) => {
   );
   const ordersResJson = await ordersRes.json();
   await new Promise((resolve) => {
-    setTimeout(resolve, 1500);
+    setTimeout(resolve, 1000);
   });
   const min_max = CommonHelper.getFirstAndLastDate(ordersResJson.orders);
   return {

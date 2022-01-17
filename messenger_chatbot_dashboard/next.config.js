@@ -18,5 +18,6 @@ module.exports = {
   },
   env: {
     HOST: process.env.HOST,
+    ANALYZER_HOST: process.env.ANALYZER_HOST
   }
 };
