@@ -1,4 +1,4 @@
-import { Badge, Card, DataTable, Link, Page } from "@shopify/polaris";
+import { Badge, Card, DataTable, Link, Page, TextStyle } from "@shopify/polaris";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -139,6 +139,7 @@ export default function Index({
           <div>
             <Card title="TOP 5 tags by Gender" sectioned>
               <Card.Section>
+                <TextStyle variation="strong">{topByGender[0].gender}</TextStyle>
                 <Badge status="critical" size="medium">{topByGender[0].product[0].tag}</Badge>
                 <Badge status="warning" size="medium">{topByGender[0].product[1].tag}</Badge>
                 <Badge status="attention" size="medium">{topByGender[0].product[2].tag}</Badge>
@@ -147,6 +148,7 @@ export default function Index({
               </Card.Section>
               <br />
               <Card.Section>
+                <TextStyle variation="strong">{topByGender[1].gender}</TextStyle>
                 <Badge status="critical" size="medium">{topByGender[1].product[0].tag}</Badge>
                 <Badge status="warning" size="medium">{topByGender[1].product[1].tag}</Badge>
                 <Badge status="attention" size="medium">{topByGender[1].product[2].tag}</Badge>

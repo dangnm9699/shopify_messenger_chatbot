@@ -37,6 +37,24 @@ body {
   padding: 2rem !important;
 }
 
+.fullwidth.tag > div > .Polaris-Card {
+  height: 100%;
+}
+
+.fullwidth.tag > div > .Polaris-Card >.Polaris-Card__Section {
+  height: calc(100% - 4rem);
+}
+
+.fullwidth.tag > div > .Polaris-Card > .Polaris-Card__Section .Polaris-Badge,
+.fullwidth.tag > div > .Polaris-Card > .Polaris-Card__Section .Polaris-TextStyle--variationStrong {
+  margin-right: 0.5rem;
+}
+
+.fullwidth.tag > div:first-child > .Polaris-Card > .Polaris-Card__Section {
+  display: flex;
+  align-items: center;
+}
+
 .Polaris-Card__Section > .Polaris-Card__Section {
   padding: 0 !important;
 }
