@@ -1,0 +1,3 @@
+[submodule "messenger_chatbot"]
+    path = messenger_chatbot
+    url = git@github.com:tungnkhust/Weibot-Chatbot-Messenger-in-Ecommerce.git
